@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Mentor Dashboard</title>
+  <link rel="stylesheet" href="mentor-dashboard.css">
+</head>
+<body>
+  <div class="dashboard">
+    <aside class="sidebar">
+      <h2>👨‍🏫 Mentor Panel</h2>
+      <ul>
+        <li class="active" data-section="students">My Students</li>
+        <li data-section="marks">Marks</li>
+        <li data-section="updates">Post Updates</li>
+        <li data-section="feedback">Feedback</li>
+        <li id="logout">Logout</li>
+      </ul>
+    </aside>
+
+    <main class="main-content">
+      <!-- My Students -->
+      <section id="students" class="content-section active">
+        <h2>Assigned Students</h2>
+<table id="assignedStudentsTable" border="1" cellspacing="0" cellpadding="10">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Email</th>
+      <th>Phone</th>
+      <th>Department</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody id="studentList">
+    <!-- Student rows will go here -->
+    <tr>
+      <td>John Doe</td>
+      <td>johndoe@example.com</td>
+      <td>990459303</td>
+      <td>Computer Science</td>
+      <td>
+        <button class="view-btn" 
+                data-name="John Doe" 
+                data-email="johndoe@example.com" 
+                data-phone="+1234567890" 
+                data-dept="Computer Science">View</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- Add this below all sections inside main-content -->
+<div id="studentProfileModal" class="modal hidden">
+  <div class="modal-content">
+    <span id="closeModal" class="close-btn">&times;</span>
+    <h3>Student Profile</h3>
+    <p><strong>Name:</strong> <span id="profileName"></span></p>
+    <p><strong>Email:</strong> <span id="profileEmail"></span></p>
+    <p><strong>Phone:</strong> <span id="profilePhone"></span></p>
+    <p><strong>Department:</strong> <span id="profileDept"></span></p>
+  </div>
+</div>
+
+  </table>
+    </section>
+
+      
+
+      <!-- Post Update -->
+      <section id="updates" class="content-section">
+        <h2>Post Update for Students</h2>
+        <form id="updateForm">
+          <textarea id="mentorUpdate" rows="4" placeholder="Write your update..."></textarea>
+          <button type="submit">Post Update</button>
+        </form>
+      </section>
+
+      <!-- Feedback Section -->
+      <section id="feedback" class="content-section">
+        <h2>Student Feedback</h2>
+        <div id="feedbackList">
+          <!-- Feedback will be injected here -->
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="mentor-dashboard.js"></script>
+</body>
+</html>

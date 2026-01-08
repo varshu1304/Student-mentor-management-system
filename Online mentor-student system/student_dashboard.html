@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Student Dashboard</title>
+  <link rel="stylesheet" href="student-dashboard.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</head>
+<body>
+
+<div class="dashboard">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <h2>🎓 Student Portal</h2>
+    <ul class="nav-links">
+      <li class="active" data-target="profile">Profile</li>
+      <li data-target="courses">MOOC Courses</li>
+      <li data-target="marks">Marks</li>
+      <li data-target="updates">Mentor Updates</li>
+      <li data-target="chat">Chat</li>
+      <li data-target="upload">Upload Documents</li>
+      <li data-target="feedback">Feedback</li>
+    </ul>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <div class="header">
+      <div class="notifications">
+        <button onclick="toggleNotifications()">🔔</button>
+        <div id="notificationBar" class="notification-bar">
+          <p>No new notifications.</p>
+        </div>
+      </div>
+
+      <div class="profile-mini">
+        <div class="profile-name"></div>
+        <div class="dropdown">
+          <button onclick="toggleDropdown()">▼</button>
+          <div id="profileDropdown" class="dropdown-content">
+            <a href="#">View Profile</a>
+            <a href="#" onclick="logout()">Logout</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="theme-toggle">
+        <button onclick="toggleTheme()">🌙</button>
+      </div>
+    </div>
+
+    <!-- Profile Section -->
+    <section id="profile" class="content-section active">
+      <h2>My Profile</h2>
+      <div class="profile-card">
+        <div class="profile-header">
+          <img src="https://img.freepik.com/free-vector/young-man-orange-hoodie_1308-175788.jpg?t=st=1746452955~exp=1746456555~hmac=000ee42b1b2fc3c4735845ec327d48ea5e7e1759f0da420b254a67bfd0c1bdac&w=740" alt="Profile Picture" class="profile-img">
+          <div class="profile-info" id="profileInfo">
+            <h3 id="studentName">Name: Loading...</h3>
+            <p class="email" id="studentEmail">Email:</p>
+            <p class="phone" id="studentPhone">Mobile Number:</p>
+            <p class="enrollment-date">Enrolled Since: Jan 2020</p>
+          </div>
+        </div>
+
+        <div class="profile-details">
+          <div class="profile-item">
+            <h4>Department</h4>
+            <p id="department"></p>
+          </div>
+
+          <div class="profile-item">
+            <h4>Mentor</h4>
+            <p id="mentor"></p>
+          </div>
+        </div>
+
+        <button class="edit-btn">Edit Profile</button>
+      </div>
+
+      <!-- Editable Profile Form -->
+      <div id="editProfileForm" class="edit-form-wrapper" style="display: none;">
+        <form onsubmit="saveProfile(event)">
+          <label for="editName">Name:</label>
+          <input type="text" id="editName" required>
+
+          <label for="editEmail">Email:</label>
+          <input type="email" id="editEmail" required>
+
+          <label for="editPhone">Phone:</label>
+          <input type="tel" id="editPhone" required>
+
+          <label for="editDepartment">Department:</label>
+          <input type="text" id="editDepartment" required>
+
+          <label for="editMentor">Mentor:</label>
+          <input type="text" id="editMentor" required>
+
+          <button type="submit">Save</button>
+          <button type="button" onclick="cancelEdit()">Cancel</button>
+        </form>
+      </div>
+    </section>
+
+    <!-- Courses Section -->
+    <section id="courses" class="content-section">
+      <h2>Courses Enrolled</h2>
+      <form id="addCourseForm" onsubmit="addCourse(event)">
+        <input type="text" id="courseName" placeholder="Course Name" required>
+        <input type="date" id="enrollmentDate" required>
+        <button type="submit">Add Course</button>
+      </form>
+      <ul id="courseList"></ul>
+    </section>
+    <!-- Marks Section -->
+    <section id="marks" class="content-section">
+      <h2>Marks</h2>
+      <form id="marksForm" onsubmit="addMarks(event)">
+        <input type="text" id="subjectName" placeholder="Subject Name" required>
+        <input type="number" id="subjectMarks" placeholder="Marks" required min="0" max="100">
+        <button type="submit">Add Marks</button>
+      </form>
+    
+      <table id="marksTable">
+        <thead>
+          <tr>
+            <th>Subject</th>
+            <th>Marks</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="marksTableBody">
+          <!-- Marks will appear here -->
+        </tbody>
+      </table>
+    </section>
+    
+    
+
+    <!-- Mentor Updates -->
+    <section id="updates" class="content-section card">
+      <h2>Mentor Updates</h2>
+      <ul>
+        <li><strong>🕐 Meeting:</strong> Zoom call at 5 PM, Thursday</li>
+        <li><strong>📘 Assignment:</strong> Submit Module 3 by Friday</li>
+      </ul>
+    </section>
+
+    <!-- Chat -->
+    <section id="chat" class="content-section card">
+      <h2>Chat</h2>
+      <div class="chat-box" id="chatBox">
+        <p><strong>Mentor:</strong> Please submit your assignment by Friday.</p>
+      </div>
+      <div class="chat-input">
+        <input type="text" id="chatInput" placeholder="Type a message...">
+        <button onclick="sendMessage()">Send</button>
+      </div>
+    </section>
+
+    <!-- Upload -->
+    <section id="upload" class="content-section card">
+      <h2>Upload Documents</h2>
+      <input type="file">
+    </section>
+
+    <!-- Feedback -->
+    <section id="feedback" class="content-section card">
+      <h2>Feedback</h2>
+      <textarea placeholder="Write your feedback..." rows="5"></textarea>
+      <br>
+      <button class="send-btn">Send Feedback</button>
+    </section>
+  </main>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const student = JSON.parse(localStorage.getItem("student"));
+
+  if (!student) {
+    window.location.href = "fron_page.html";
+    return;
+  }
+
+  // Display student data
+  document.getElementById("studentName").textContent = student.name;
+  document.getElementById("studentEmail").textContent = student.email;
+  document.getElementById("studentPhone").textContent = student.phone;
+  document.getElementById("department").textContent = student.department;
+  document.getElementById("mentor").textContent = student.mentor;
+
+  const moocCourseList = document.getElementById("courseList");
+moocCourseList.innerHTML = "";
+if (Array.isArray(student.moocCourses)) {
+  student.moocCourses.forEach(course => {
+    const li = document.createElement("li");
+    li.textContent = course;
+    moocCourseList.appendChild(li);
+  });
+}
+
+
+
+  // Sidebar nav
+  const navLinks = document.querySelectorAll('.nav-links li');
+  const sections = document.querySelectorAll('.content-section');
+  navLinks.forEach(link => {
+    link.addEventListener('click', function () {
+      navLinks.forEach(l => l.classList.remove('active'));
+      this.classList.add('active');
+      const target = this.getAttribute('data-target');
+      sections.forEach(sec => sec.classList.remove('active'));
+      document.getElementById(target).classList.add('active');
+    });
+  });
+
+  // Theme toggle
+  window.toggleTheme = function () {
+    document.body.classList.toggle('dark-mode');
+    const icon = document.querySelector('.theme-toggle button');
+    icon.textContent = document.body.classList.contains('dark-mode') ? '🌞' : '🌙';
+  };
+
+  // Notifications
+  window.toggleNotifications = function () {
+    document.getElementById('notificationBar').classList.toggle('active');
+  };
+
+  // Dropdown
+  window.toggleDropdown = function () {
+    document.getElementById('profileDropdown').classList.toggle('show');
+  };
+
+  // Edit profile
+  document.querySelector(".edit-btn").addEventListener("click", () => {
+    document.getElementById('profileInfo').style.display = 'none';
+    document.getElementById('editProfileForm').style.display = 'block';
+    document.getElementById('editName').value = student.name;
+    document.getElementById('editEmail').value = student.email;
+    document.getElementById('editPhone').value = student.phone;
+    document.getElementById('editDepartment').value = student.department;
+    document.getElementById('editMentor').value = student.mentor;
+  });
+
+  window.saveProfile = function (event) {
+    event.preventDefault();
+    student.name = document.getElementById('editName').value;
+    student.email = document.getElementById('editEmail').value;
+    student.phone = document.getElementById('editPhone').value;
+    student.department = document.getElementById('editDepartment').value;
+    student.mentor = document.getElementById('editMentor').value;
+    localStorage.setItem("student", JSON.stringify(student));
+    location.reload(); // reload to apply changes
+  };
+
+  window.cancelEdit = function () {
+    document.getElementById('editProfileForm').style.display = 'none';
+    document.getElementById('profileInfo').style.display = 'block';
+  };
+ //marks
+ // Add Marks
+window.addMarks = function (event) {
+  event.preventDefault();
+  const subject = document.getElementById("subjectName").value.trim();
+  const marks = document.getElementById("subjectMarks").value.trim();
+
+  if (!subject || !marks) return;
+
+  if (!Array.isArray(student.marks)) student.marks = [];
+
+  student.marks.push({ subject, marks });
+  localStorage.setItem("student", JSON.stringify(student));
+  renderMarks();
+  document.getElementById("marksForm").reset();
+  // Refresh the table
+};
+
+// Edit Marks
+window.editMark = function (index) {
+  const entry = student.marks[index];
+  document.getElementById("subjectName").value = entry.subject;
+  document.getElementById("subjectMarks").value = entry.marks;
+
+  student.marks.splice(index, 1); // Remove the old entry
+  localStorage.setItem("student", JSON.stringify(student));
+  renderMarks(); // Refresh
+};
+
+// Delete Marks
+window.deleteMark = function (index) {
+  student.marks.splice(index, 1);
+  localStorage.setItem("student", JSON.stringify(student));
+  renderMarks(); // Refresh
+};
+
+// Render Marks Table
+window.renderMarks = function () {
+  const tbody = document.getElementById("marksTableBody");
+  tbody.innerHTML = "";
+
+  if (Array.isArray(student.marks) && student.marks.length > 0) {
+    student.marks.forEach((entry, index) => {
+      const row = document.createElement("tr");
+
+      row.innerHTML = `
+        <td>${entry.subject}</td>
+        <td>${entry.marks}</td>
+        <td>
+          <button onclick="editMark(${index})">Edit</button>
+          <button onclick="deleteMark(${index})">Delete</button>
+        </td>
+      `;
+
+      tbody.appendChild(row);
+    });
+  } else {
+    tbody.innerHTML = `<tr><td colspan="3">No marks added yet.</td></tr>`;
+  }
+};
+renderMarks();
+
+
+  window.addCourse = function (event) {
+  event.preventDefault();
+  const name = document.getElementById('courseName').value;
+  const date = document.getElementById('enrollmentDate').value;
+
+  const courseEntry = `${name} - Enrolled on: ${new Date(date).toLocaleDateString()}`;
+
+  if (!Array.isArray(student.moocCourses)) student.moocCourses = [];
+  student.moocCourses.push(courseEntry);
+
+  localStorage.setItem("student", JSON.stringify(student));
+
+  // Update the MOOC course list
+  const moocCourseList = document.getElementById("courseList");
+  const li = document.createElement("li");
+  li.textContent = courseEntry;
+  moocCourseList.appendChild(li);
+
+  document.getElementById('addCourseForm').reset();
+};
+
+  window.sendMessage = function () {
+    const input = document.getElementById("chatInput");
+    const chatBox = document.getElementById("chatBox");
+    if (input.value.trim() !== "") {
+      const p = document.createElement("p");
+      p.innerHTML = `<strong>You:</strong> ${input.value}`;
+      chatBox.appendChild(p);
+      input.value = "";
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+  };
+
+  window.logout = function () {
+    if (confirm("Are you sure you want to log out?")) {
+      localStorage.removeItem("student");
+      window.location.href = "fron_page.html";
+    }
+  };
+
+});
+renderMarks();
+
+</script>
+
+</body>
+</html>
+
+

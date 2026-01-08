@@ -1,0 +1,31 @@
+{
+    
+    "mentors": [
+      { "id": 1,"name":"Dr. Smith", "email": "Smith@example.com", "password": "mentor123" }
+    ],
+      "students": [
+        {
+          "id": 1,
+          "email": "john@example.com",
+          "password": "123456",
+          "name": "John Doe",
+          "phone": "990459303",
+          "department": "Computer Science",
+          "courses": ["Web Dev", "AI", "Data Structures"],
+          "mentor": "Dr. Smith",
+          "mid":1
+        },
+        {
+          "id": 2,
+          "email": "jane@example.com",
+          "password": "abcdef",
+          "name": "Jane Smith",
+          "phone": "9876543210",
+          "department": "IT",
+          "courses": ["DBMS", "Networking"],
+          "mentor": "Dr. Adams"
+        }
+      ]
+    
+  }
+  

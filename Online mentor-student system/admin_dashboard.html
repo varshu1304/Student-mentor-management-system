@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Dashboard</title>
+  <link rel="stylesheet" href="admin-dashboard.css" />
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <h2>Admin Dashboard</h2>
+    <ul>
+      <li><a href="#mentors">Mentors</a></li>
+      <li><a href="#manage">Manage Students</a></li>
+      <li><a href="front_page.html">Logout</a></li>
+    </ul>
+  </nav>
+
+  <!-- Dashboard Content -->
+  <div class="dashboard">
+
+    <!-- Mentors Section -->
+    <section id="mentors">
+      <h3>Mentors and Assigned Students</h3>
+      <div class="mentor-block" id="mentorList">
+        <!-- Mentors and students will be loaded here dynamically -->
+      </div>
+    </section>
+
+    <!-- Manage Section -->
+    <section id="manage">
+      <h3>Assign or Remove Student</h3>
+      <form id="manageForm">
+        <label for="mentor">Mentor Name</label>
+        <input type="text" id="mentor" placeholder="Mentor Name" required />
+
+        <label for="student">Student Name</label>
+        <input type="text" id="student" placeholder="Student Name" required />
+
+        <label for="action">Action</label>
+        <select id="action" required>
+          <option value="add">Add</option>
+          <option value="remove">Remove</option>
+        </select>
+
+        <button type="submit">Submit</button>
+      </form>
+    </section>
+
+  </div>
+
+  <script>
+    const mentorData = {
+      "Mentor A": ["Student 1", "Student 2"],
+      "Mentor B": ["Student 3"]
+    };
+
+    function renderMentorList() {
+      const container = document.getElementById("mentorList");
+      container.innerHTML = "";
+
+      for (let mentor in mentorData) {
+        const div = document.createElement("div");
+        div.classList.add("mentor-card");
+
+        let students = mentorData[mentor].map(s => `<li>${s}</li>`).join("");
+
+        div.innerHTML = `
+          <h4>${mentor}</h4>
+          <ul>${students || "<li>No students assigned.</li>"}</ul>
+        `;
+
+        container.appendChild(div);
+      }
+    }
+
+    document.getElementById("manageForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      const mentor = document.getElementById("mentor").value.trim();
+      const student = document.getElementById("student").value.trim();
+      const action = document.getElementById("action").value;
+
+      if (!mentorData[mentor]) mentorData[mentor] = [];
+
+      if (action === "add") {
+        if (!mentorData[mentor].includes(student)) {
+          mentorData[mentor].push(student);
+        }
+      } else if (action === "remove") {
+        mentorData[mentor] = mentorData[mentor].filter(s => s !== student);
+      }
+
+      renderMentorList();
+      this.reset();
+    });
+
+    renderMentorList();
+  </script>
+
+</body>
+</html>
